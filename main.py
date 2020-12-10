@@ -71,7 +71,6 @@ def iniciarsesion():
 def gracias():
     return render_template("gracias.html")     
     
-
 @app.route('/recuperarcontraseña')
 def recuperarcontraseña():
     return render_template("recuperarContrasena.html")

@@ -12,7 +12,6 @@ REQ_FORGOT = 'REQ_FORGOT'
 U_UNCONFIRMED = 'UNCONFIRMED'
 U_CONFIRMED = 'CONFIRMED'
 
-
 def isEmailValid(email):
     is_valid = validate_email(email)
     return is_valid
@@ -23,7 +22,6 @@ def isUsernameValid(user):
         return True
     else:
         return False
-
 
 def isPasswordValid(password):
     if re.search(pass_reguex, password):
