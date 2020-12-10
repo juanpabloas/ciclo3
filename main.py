@@ -8,8 +8,21 @@ from form import formInicio
 app=Flask(__name__)
 app.secret_key=os.urandom(24)
 
+@app.route('/',methods=['GET','POST'])
+def iniciarsesion():
+    form = formInicio()
+    if (form.validate_on_submit()):
+        flash("inicio de sesión solicitado por el usuario{} ".format(form.txtNombre.data))
+        return redirect(url_for("gracias"))
+    if request.method=='POST'and 'signup' in request.form:    
+        return redirect(url_for("registro"))
+    elif request.method=='POST'and 'forget-password' in request.form:    
+        return redirect(url_for("recuperarcontraseña"))
+    return render_template("iniciar_sesion.html", form=form)
 
-@app.route('/')
+
+
+@app.route('/principal')
 def principal():
     return render_template("principal.html")
 
@@ -55,17 +68,8 @@ def actualizar():
 def comentar():
     return render_template("comentar.html")
 
-@app.route('/Iniciarsesion',methods=['GET','POST'])
-def iniciarsesion():
-    form = formInicio()
-    if (form.validate_on_submit()):
-        flash("inicio de sesión solicitado por el usuario{} ".format(form.txtNombre.data))
-        return redirect(url_for("gracias"))
-    if request.method=='POST'and 'signup' in request.form:    
-        return redirect(url_for("registro"))
-    elif request.method=='POST'and 'forget-password' in request.form:    
-        return redirect(url_for("recuperarcontraseña"))
-    return render_template("iniciar_sesion.html", form=form)
+
+
 
 @app.route('/gracias')
 def gracias():
