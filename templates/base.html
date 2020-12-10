@@ -9,7 +9,8 @@
 
 </head> 
 <body >
-    <img src="/images/banner_blogs.jpg"/>
+    <img src="{{ url_for('static', filename='images/banner_blogs.jpg')}}"/>
+    <!img src="/{{banner_blogs}}"/>
     
     {%block contenido%}
     {%endblock%}

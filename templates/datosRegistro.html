@@ -20,7 +20,7 @@
         {%endfor%}
     </section>
    
-  <img src="/images/banner_blogs.jpg"/>
+  <img src="{{ url_for('static', filename='images/banner_blogs.jpg')}}"/>
     <center>
         <form name="formulario" method="post" action="{{url_for('registro')}}">
             <h2>Ingrese sus datos</h2>
