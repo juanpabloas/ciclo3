@@ -2,6 +2,9 @@ import yagmail as yagmail
 from flask import Flask,render_template,request,redirect,url_for,flash
 import utils
 import os
+from markupsafe import escape #inyeccion de codigo
+from form import formInicio
+
 app=Flask(__name__)
 app.secret_key=os.urandom(24)
 
@@ -15,9 +18,9 @@ def principal():
 def registro():
     try: 
         if request.method=='POST':
-            user_name = request.form["txtNombre"]
-            email = request.form["txtEma"] 
-            clave = request.form["txtPw1"]  
+            user_name = escape(request.form["txtNombre"])
+            email = escape(request.form["txtEma"]) 
+            clave = escape(request.form["txtPw1"])  
             error = None
 
             if not utils.isUsernameValid(user_name):
@@ -54,19 +57,28 @@ def comentar():
 
 @app.route('/Iniciarsesion',methods=['GET','POST'])
 def iniciarsesion():
-    return render_template("IniciarSesion.html")
-     
+    form = formInicio()
+    if (form.validate_on_submit()):
+        flash("inicio de sesión solicitado por el usuario{} ".format(form.txtNombre.data))
+        return redirect(url_for("gracias"))
+    if request.method=='POST'and 'signup' in request.form:    
+        return redirect(url_for("registro"))
+    elif request.method=='POST'and 'forget-password' in request.form:    
+        return redirect(url_for("recuperarcontraseña"))
+    return render_template("iniciar_sesion.html", form=form)
+
+@app.route('/gracias')
+def gracias():
+    return render_template("gracias.html")     
     
 
 @app.route('/recuperarcontraseña')
 def recuperarcontraseña():
-    return render_template("recuperarContraseña.html")
+    return render_template("recuperarContrasena.html")
 
 @app.route('/crear')
 def crear():
     return render_template("crear.html")
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)        

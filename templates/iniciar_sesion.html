@@ -1,0 +1,39 @@
+{%extends "base.html"%}
+{%block contenido%}
+
+<center>
+<div id='AppendHere'></div>
+<h1>Iniciar sesión</h1>
+<form id="loginform" name="loginform" action="" method="POST" novalidate>
+    {{form.hidden_tag()}}
+    <div class="form-row input-info"> 
+        <br> <br>        
+             
+        <label class="col-md-12 mb-3 text-left">Usuario:</label>
+        {{form.txtNombre(size=30)}}    
+        <br><br>     
+       
+        <label>Contraseña:</label>
+        {{form.txtPw1(size=30)}}<br>         
+        <div>
+            {{form.recordar()}}
+            {{form.recordar.label}}<br>        
+        </div>
+
+        <div class="log-sign">            
+            {{form.enviar(class="login")}}            
+        </div>
+        <br> <br> 
+        
+        <div class="log-sign">      
+            <button type="signup"class="link" name="forget-password" ><i class="fa fa-plus"></i> Olvidó contraseña?</button>    
+        </div>
+
+        <div class="log-sign">      
+            <button type="signup" class="signup" name="signup" ><i class="fa fa-plus"></i> Registrarse</button>    
+        </div>
+    </div>        
+
+</form>
+</center>
+{%endblock%}

@@ -3,52 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesion</title>
-    <link rel="stylesheet" href="/static/formulario2.css">
+    <title>Iniciar sesion-{%block titulo%}{%endblock%}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/formulario2.css') }}">
     <script src="/static/javascript.js"> </script>
 
 </head> 
 <body >
     <img src="/images/banner_blogs.jpg"/>
     <center>
-        <form>
-            <div id='AppendHere'></div>
-<!--start login form-->
-<form id="loginform" action="#"><!--action="the site link"-->
-	<!--start header-->
-	<h1>Iniciar sesión</h1>
-	
-    
-    
-    <div class="input-info">
-        <!--the input div containe the information of the user-->
-        <i class="fa fa-user"></i>
-        <!--user name-->
-        <input type="text" placeholder="Usuario" id="txtNombre">
-        <i class="fa fa-envelope"></i>
-        <!--user email-->
         
-        <i class="fa fa-lock"></i>
-        <!--yser password-->
-        <input type="password" placeholder="Contraseña" id="txtPw1">
-        <!--the checkbox to make the browser remember the user-->
-        <div class="log-sign"><!--the login button and the sign up button>[to the sign up page]-->
-            <button class="login" form="loginform" onclick="JavaScript:validardatosingreso();"><i class="fa fa-mail-forward (alias)"></i> <a href="./principal.html">Iniciar sesión</a></button><!--log in-->
-               
+            <div id='AppendHere'></div>
+      
+        <form id="loginform" name="loginform" action="#" method="POST" novalidate>
+           
+            <h1>Iniciar sesión</h1>
+            
+            <div class="input-info">
+                <!--the input div containe the information of the user-->
+                <i class="fa fa-user"></i>
+                <!--user name-->
+                <input type="text" placeholder="Usuario" id="txtNombre" name="txtNombre">
+                <i class="fa fa-envelope"></i>
+                <!--user email-->
+                
+                <i class="fa fa-lock"></i>
+                <!--yser password-->
+                <input type="password" placeholder="Contraseña" id="txtPw1" name="txtPw1">
+                <!--the checkbox to make the browser remember the user-->
+                <div class="log-sign"><!--the login button and the sign up button>[to the sign up page]-->
+                    <button class="login" form="loginform" onclick="JavaScript:validardatosingreso();"><i class="fa fa-mail-forward (alias)"></i> <a href="./principal.html">Iniciar sesión</a></button><!--log in-->
+                    
+                </div>
+            </div>
+
+            <!--end of the log-sign-->
+        <br><br>
+        <p class="forget-password"><a href="./recuperarContrasena.html">Olvidó su contraseña?</a></p>
+        
+        <div> <a href="./datosRegistro.html" target="_blank"><!--the link to the sign up page-->
+                    <button class="signup" form="signupform" ><i class="fa fa-plus"></i> Registrarse</button>
+                
+                </a>
         </div>
-    </div>
-
-    <!--end of the log-sign-->
- <br><br>
-  <p class="forget-password"><a href="./recuperarContrasena.html">Olvidó su contraseña?</a></p>
-  
-  <div> <a href="./datosRegistro.html" target="_blank"><!--the link to the sign up page-->
-            <button class="signup" form="signupform" ><i class="fa fa-plus"></i> Registrarse</button>
-          
-        </a>
-  </div>
-        </form>
+                </form>
     </center>
-
+    {%block contenido%}
+    {%endblock%}
 </body>
 </html>
