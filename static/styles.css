@@ -150,6 +150,10 @@ button{box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.58);}
       margin-left: 32%
   }
   
+  .label-form{
+    text-align: right;
+    padding-left: 10em;
+  }
   
   .forget-password {
       text-align: center;

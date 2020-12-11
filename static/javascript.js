@@ -17,27 +17,24 @@ function animate_Me(target, moveMe){
   
   
   function validardatos(){
-    var nombre = document.frmRegistro.txtNombre; 
-    var apellido = document.frmRegistro.txtApellido; 
-    var email = document.frmRegistro.txtEma; 
-    var email2 = document.frmRegistro.txtEma2; 
-    var passw = document.frmRegistro.txtPw1; 
-    var passw2 = document.frmRegistro.txtPw2;
-    if(!txtUsr.checkValidity()){
+    var nombres = document.frmRegistro.nombres; 
+    var apellidos = document.frmRegistro.apellidos; 
+    var correo = document.frmRegistro.correo;
+    var password = document.frmRegistro.password; 
+    var password2 = document.frmRegistro.password2;
+    if(!nombres.checkValidity()){
         document.frmRegistro.mensaje.value="El usuario debe tener minimo 8 caracteres";
-    }else if(!txtEma.checkValidity()){
-        document.frmRegistro.mensaje.value="El email es un campo requerido";
-    }else if(!txtEma1.checkValidity()){
-      document.frmRegistro.mensaje.value="El email de confirmación un campo requerido";
-    }else if(txtEma.value!=txtEma2.value){
-        document.frmRegistro.mensaje.value="El correo debe igual";
-    }else if(!txtPw1.checkValidity()){
-        document.frmRegistro.mensaje.value="El password es un campo requerido";            
-    }else if(!txtPw2.checkValidity()){
+    }else if(!apellidos.checkValidity()){
+        document.frmRegistro.mensaje.value="Los apellidos debe tener minimo 8 caracteres";
+    }else if(!correo.checkValidity()){
+      document.frmRegistro.mensaje.value="El email es un campo requerido";
+    }else if(!password.checkValidity()){
+        document.frmRegistro.mensaje.value="La contraseña es un campo requerido";            
+    }else if(!password2.checkValidity()){
         document.frmRegistro.mensaje.value="La contraseña de confirmación es un campo requerido";
-    }else if(txtPw1.value!=txtPw2.value){
-        document.frmRegistro.mensaje.value="La clave y la verificacion deben ser iguales";
-    }else if (document.getElementById('checkbox1').unchecked){
+    }else if(password.value!=password2.value){
+        document.frmRegistro.mensaje.value="La contraseña y la verificacion deben ser iguales";
+    }else if (document.getElementById('estado').unchecked){
         document.frmRegistro.mensaje.value="Para continuar, debes aceptar los términos y condiciones";    
     }else{
         document.frmRegistro.mensaje.value="Puede continuar";
@@ -58,3 +55,7 @@ function validardatosingreso(){
 $('#myModal').on('shown.bs.modal', function () {
     $('#myInput').trigger('focus')
   })
+
+function guardarEst(){
+    document.getElementById("frmRegistro").action="/usuario/guardar";
+}
