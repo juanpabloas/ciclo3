@@ -56,6 +56,10 @@ $('#myModal').on('shown.bs.modal', function () {
     $('#myInput').trigger('focus')
   })
 
-function guardarEst(){
-    document.getElementById("frmRegistro").action="/usuario/guardar";
+function guardar_usuario(){
+    document.getElementById("frmRegistro").action="/registro";
+}
+
+function iniciar_sesion(){
+    document.getElementById("formInicio").action="/";
 }
