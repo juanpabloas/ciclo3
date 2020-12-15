@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, StringField, PasswordField, SubmitField
+from wtforms import BooleanField, StringField, PasswordField, SubmitField, SelectField, DateField
 from wtforms.validators import DataRequired
 
 
@@ -20,5 +20,13 @@ class formRegistro(FlaskForm):
     confirmar_password = PasswordField("Confirmar Password",validators = [DataRequired(message="No dejar vacío, completar")], render_kw={"placeholder":"Confirmar la contraseña"})
     estado = BooleanField("Estoy de acuerdo con los términos y condiciones")
     enviar = SubmitField("Enviar", render_kw={"onmouseover":"guardar_usuario()"})
+
+class formCrear(FlaskForm):
+    titulo = StringField("Titulo",validators = [DataRequired(message="No dejar vacío, completar")], render_kw={"placeholder":"Titulo"})
+    cuerpo = StringField("Cuerpo",validators = [DataRequired(message="No dejar vacío, completar")], render_kw={"placeholder":"Cuerpo"})
+    estado = BooleanField("Activo/inactivo")
+    estado_blog = SelectField(u'Estado del blog', choices=[('publico', 'publico'), ('privado', 'privado')])
+    fecha = DateField('Fecha de creacion',format='%d-%m-%Y',validators = [DataRequired(message="No dejar vacío, completar")],render_kw={'placeholder': 'dd/mm/AAAA'})
+    enviar = SubmitField("Enviar", render_kw={"onmouseover":"guardar_blog()"})
     
     

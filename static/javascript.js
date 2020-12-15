@@ -63,3 +63,7 @@ function guardar_usuario(){
 function iniciar_sesion(){
     document.getElementById("formInicio").action="/";
 }
+
+function guardar_blog(){
+    document.getElementById("formCrear").action="/crear";
+}

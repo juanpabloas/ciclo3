@@ -1,12 +1,14 @@
 import yagmail as yagmail
-from flask import Flask,render_template,request,redirect,url_for,flash, session
+from flask import *
 import utils
 import os
 from markupsafe import escape #inyeccion de codigo
 from form import formInicio
 from form import formRegistro
+from form import formCrear
 import sqlite3
 from markupsafe import escape
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app=Flask(__name__)
@@ -15,24 +17,30 @@ app.secret_key=os.urandom(24)
 
 @app.route('/',methods=['GET','POST'])
 def iniciarsesion1():
-    form = formInicio() 
-    
+    form = formInicio()        
     if request.method=='POST' and 'iniciar_sesion' in request.form:                      
         usuari = escape(request.form["usuario"])
         clav = escape(request.form["clave"])
-        with sqlite3.connect('blogs.db') as con: 
-            cur = con.cursor()           
-            cur.execute("SELECT * FROM Usuario WHERE correo = ? AND contraseña = ?",(usuari,clav))
-            if cur.fetchone():
-                session["usuario"] = usuari 
-                return render_template("principal.html",form=form)
+        try:
+            with sqlite3.connect('blogs.db') as con: 
+                cur = con.cursor()           
+                user = cur.execute(f"SELECT contraseña FROM Usuario WHERE correo = '{usuari}'").fetchone()
+                if user != None:
+                    clave_hash = user[0]
+                    if check_password_hash(clave_hash,clav):
+                        session["usuario"] = usuari
+                         
+                        return render_template("principal.html",form=form)           
+                    else:
+                        return "Usuario o contraseña invalido"   
+        except:
+            pass
         return "Usuario no permitido"
         
     if request.method =='POST' and 'signup' in request.form:    
         return redirect(url_for("registro"))
     elif request.method =='POST'and 'forget-password' in request.form:    
-        return redirect(url_for("recuperarcontraseña"))
-        
+        return redirect(url_for("recuperarcontraseña"))        
     return render_template("iniciar_sesion.html", form=form)
 
 
@@ -51,7 +59,8 @@ def registro():
            correo = escape(request.form["correo"])  
         #    password = escape(request.form["password"])  
            confirmar_password = escape(request.form["confirmar_password"])  
-           estado = escape(request.form["estado"])  
+           estado = escape(request.form["estado"]) 
+           hashclave = generate_password_hash(confirmar_password) 
         #    error = None
         #    if not utils.isUsernameValid(nombres):
         #        error = "El nombre debe ser alfanumerico"
@@ -77,7 +86,7 @@ def registro():
            try:
                with sqlite3.connect('blogs.db') as con: 
                    cur = con.cursor()
-                   cur.execute("INSERT INTO Usuario(nombres,apellidos,correo,contraseña,estado)VALUES(?,?,?,?,?)",(nombres,apellidos,correo,confirmar_password,estado))
+                   cur.execute("INSERT INTO Usuario(nombres,apellidos,correo,contraseña,estado)VALUES(?,?,?,?,?)",(nombres,apellidos,correo,hashclave,estado))
                    con.commit()
                    return "Guardado Satisfactoriamente" 
 
@@ -109,9 +118,29 @@ def gracias():
 def recuperarcontraseña():
     return render_template("recuperarContrasena.html")
 
-@app.route('/crear')
+@app.route('/crear',methods=['GET','POST'])
 def crear():
-    return render_template("crear.html")
+    form=formCrear()  
+    try: 
+       if request.method=='POST':
+           titulo = escape(request.form["titulo"])
+           cuerpo = escape(request.form["cuerpo"]) 
+           estado = escape(request.form["estado"])  
+           estado_blog = escape(request.form["estado_blog"])  
+           fecha = escape(request.form["fecha"])       
+           try:
+               with sqlite3.connect('blogs.db') as con: 
+                   cur = con.cursor()
+                   cur.execute("INSERT INTO Blogs(titulo,cuerpo,estado,fecha_creacion,estado_blog)VALUES(?,?,?,?,?)",(titulo,cuerpo,estado,fecha,estado_blog))
+                   con.commit()
+                   return "Guardado Satisfactoriamente"
+           except:
+               con.rollback()
+           return render_template("principal.html")
+       return render_template("crear.html", form=form) 
+    except:
+       return render_template("crear.html", form=form)  
+    
 
 @app.route("/logout")
 def logout():
