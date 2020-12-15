@@ -6,6 +6,7 @@ from markupsafe import escape #inyeccion de codigo
 from form import formInicio
 from form import formRegistro
 from form import formCrear
+from form import formComentarios
 import sqlite3
 from markupsafe import escape
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -105,9 +106,28 @@ def registro():
 def actualizar():
     return render_template("actualizar.html")
 
-@app.route('/comentar')
+@app.route('/comentar',methods=['GET','POST'])
 def comentar():
-    return render_template("comentar.html")
+    form=formComentarios()  
+    try: 
+       if request.method=='POST':
+           
+           cuerpo = escape(request.form["cuerpo"]) 
+           fecha = escape(request.form["fecha"])      
+           estado_comentario = escape(request.form["estado_comentario"])              
+           try:
+               with sqlite3.connect('blogs.db') as con: 
+                   cur = con.cursor()
+                   cur.execute("INSERT INTO Comentarios(cuerpo,fecha_creacion,estado_comentario)VALUES(?,?,?)",(cuerpo,fecha,estado_comentario))
+                   con.commit()
+                   return "Comentario guardado Satisfactoriamente"
+           except:
+               con.rollback()
+           return render_template("principal.html")
+       return render_template("comentar.html", form=form) 
+    except:
+       return render_template("comentar.html", form=form)  
+    
 
 
 @app.route('/gracias')

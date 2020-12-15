@@ -28,5 +28,11 @@ class formCrear(FlaskForm):
     estado_blog = SelectField(u'Estado del blog', choices=[('publico', 'publico'), ('privado', 'privado')])
     fecha = DateField('Fecha de creacion',format='%d-%m-%Y',validators = [DataRequired(message="No dejar vacío, completar")],render_kw={'placeholder': 'dd/mm/AAAA'})
     enviar = SubmitField("Enviar", render_kw={"onmouseover":"guardar_blog()"})
+
+class formComentarios(FlaskForm):
+    cuerpo = StringField("Cuerpo",validators = [DataRequired(message="No dejar vacío, completar")], render_kw={"placeholder":"Cuerpo"})
+    fecha = DateField('Fecha de creacion',format='%d-%m-%Y',validators = [DataRequired(message="No dejar vacío, completar")],render_kw={'placeholder': 'dd/mm/AAAA'})
+    estado_comentario = BooleanField("Activo/inactivo")
+    enviar = SubmitField("Enviar", render_kw={"onmouseover":"guardar_comentarios()"})
     
     

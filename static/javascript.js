@@ -67,3 +67,7 @@ function iniciar_sesion(){
 function guardar_blog(){
     document.getElementById("formCrear").action="/crear";
 }
+
+function guardar_comentarios(){
+    document.getElementById("formComentarios").action="/comentar";
+}
