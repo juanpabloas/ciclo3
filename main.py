@@ -10,6 +10,7 @@ from form import formComentarios
 import sqlite3
 from markupsafe import escape
 from werkzeug.security import generate_password_hash, check_password_hash
+import random
 
 
 app=Flask(__name__)
@@ -47,60 +48,66 @@ def iniciarsesion1():
 
 @app.route('/principal')
 def principal():
-    return render_template("principal.html")
+    if "usuari" in session:
+        return render_template("principal.html")
+    else:
+        return "accion no permitida <a href='/'>Adios</a>"
+
 
 
 @app.route('/registro',methods=['GET','POST'])
 def registro():
+    
     form=formRegistro()   
     try: 
-       if request.method=='POST':
-           nombres = escape(request.form["nombres"])
-           apellidos = escape(request.form["apellidos"]) 
-           correo = escape(request.form["correo"])  
-        #    password = escape(request.form["password"])  
-           confirmar_password = escape(request.form["confirmar_password"])  
-           estado = escape(request.form["estado"]) 
-           hashclave = generate_password_hash(confirmar_password) 
-        #    error = None
-        #    if not utils.isUsernameValid(nombres):
-        #        error = "El nombre debe ser alfanumerico"
-        #        flash(error)
-        #        return render_template("datosRegistro.html")
-        #    if not utils.isUsernameValid(apellidos):
-        #        error = "Los apellidos deben ser alfanumerico"
-        #        flash(error)
-        #        return render_template("datosRegistro.html")
-        #    if not utils.isEmailValid(correo):
-        #        error = "El correo es inválido" 
-        #        flash(error)
-        #        return render_template("datosRegistro.html") 
-        #    if not utils.isPasswordValid(password):
-        #        error = "La contraseña es inválida"
-        #        flash(error)
-        #        return render_template("datosRegistro.html")
-        #    if not utils.isPasswordValid(confirmar_password):
-        #        error = "La contraseña es inválida"
-        #        flash(error)
-        #        return render_template("datosRegistro.html")
-            
-           try:
-               with sqlite3.connect('blogs.db') as con: 
-                   cur = con.cursor()
-                   cur.execute("INSERT INTO Usuario(nombres,apellidos,correo,contraseña,estado)VALUES(?,?,?,?,?)",(nombres,apellidos,correo,hashclave,estado))
-                   con.commit()
-                   return "Guardado Satisfactoriamente" 
+        if request.method=='POST':
+            nombres = escape(request.form["nombres"])
+            apellidos = escape(request.form["apellidos"]) 
+            correo = escape(request.form["correo"])  
+            #    password = escape(request.form["password"])  
+            confirmar_password = escape(request.form["confirmar_password"])  
+            estado = escape(request.form["estado"]) 
+            hashclave = generate_password_hash(confirmar_password) 
+            #    error = None
+            #    if not utils.isUsernameValid(nombres):
+            #        error = "El nombre debe ser alfanumerico"
+            #        flash(error)
+            #        return render_template("datosRegistro.html")
+            #    if not utils.isUsernameValid(apellidos):
+            #        error = "Los apellidos deben ser alfanumerico"
+            #        flash(error)
+            #        return render_template("datosRegistro.html")
+            #    if not utils.isEmailValid(correo):
+            #        error = "El correo es inválido" 
+            #        flash(error)
+            #        return render_template("datosRegistro.html") 
+            #    if not utils.isPasswordValid(password):
+            #        error = "La contraseña es inválida"
+            #        flash(error)
+            #        return render_template("datosRegistro.html")
+            #    if not utils.isPasswordValid(confirmar_password):
+            #        error = "La contraseña es inválida"
+            #        flash(error)
+            #        return render_template("datosRegistro.html")
+                
+            try:
+                with sqlite3.connect('blogs.db') as con: 
+                    cur = con.cursor()
+                    cur.execute("INSERT INTO Usuario(nombres,apellidos,correo,contraseña,estado)VALUES(?,?,?,?,?)",(nombres,apellidos,correo,hashclave,estado))
+                    con.commit()
+                    return "Guardado Satisfactoriamente" 
 
-           except:
-               con.rollback()
-            
-        #    yag = yagmail.SMTP("pruebatk.8912@gmail.com","prueba123")
-        #    yag.send(to=correo,subject="Activa tu cuenta",contents="Bienvenido xxx")
-        #    flash("Revisa tu correo para activar tu cuenta")
-           return render_template("iniciarsesion.html")
-       return render_template("datosRegistro.html", form=form) 
+            except:
+                con.rollback()
+                
+            #    yag = yagmail.SMTP("pruebatk.8912@gmail.com","prueba123")
+            #    yag.send(to=correo,subject="Activa tu cuenta",contents="Bienvenido xxx")
+            #    flash("Revisa tu correo para activar tu cuenta")
+            return render_template("iniciarsesion.html")
+        return render_template("datosRegistro.html", form=form) 
     except:
-       return render_template("datosRegistro.html", form=form)  
+        return render_template("datosRegistro.html", form=form)  
+
 
 @app.route('/actualizar')
 def actualizar():
@@ -108,26 +115,28 @@ def actualizar():
 
 @app.route('/comentar',methods=['GET','POST'])
 def comentar():
-    form=formComentarios()  
-    try: 
-       if request.method=='POST':
-           
-           cuerpo = escape(request.form["cuerpo"]) 
-           fecha = escape(request.form["fecha"])      
-           estado_comentario = escape(request.form["estado_comentario"])              
-           try:
-               with sqlite3.connect('blogs.db') as con: 
-                   cur = con.cursor()
-                   cur.execute("INSERT INTO Comentarios(cuerpo,fecha_creacion,estado_comentario)VALUES(?,?,?)",(cuerpo,fecha,estado_comentario))
-                   con.commit()
-                   return "Comentario guardado Satisfactoriamente"
-           except:
-               con.rollback()
-           return render_template("principal.html")
-       return render_template("comentar.html", form=form) 
-    except:
-       return render_template("comentar.html", form=form)  
-    
+    if "usuari" in session:
+        form=formComentarios()  
+        try: 
+            if request.method=='POST':
+                cuerpo = escape(request.form["cuerpo"]) 
+                fecha = escape(request.form["fecha"])      
+                estado_comentario = escape(request.form["estado_comentario"])              
+                try:
+                    with sqlite3.connect('blogs.db') as con: 
+                        cur = con.cursor()
+                        cur.execute("INSERT INTO Comentarios(cuerpo,fecha_creacion,estado_comentario)VALUES(?,?,?)",(cuerpo,fecha,estado_comentario))
+                        con.commit()
+                        return "Comentario guardado Satisfactoriamente"
+                except:
+                    con.rollback()
+                return render_template("principal.html")
+            return render_template("comentar.html", form=form) 
+        except:
+            return render_template("comentar.html", form=form)  
+    else:
+        return "accion no permitida <a href='/registro'>Adios</a>"
+
 
 
 @app.route('/gracias')
@@ -140,27 +149,30 @@ def recuperarcontraseña():
 
 @app.route('/crear',methods=['GET','POST'])
 def crear():
-    form=formCrear()  
-    try: 
-       if request.method=='POST':
-           titulo = escape(request.form["titulo"])
-           cuerpo = escape(request.form["cuerpo"]) 
-           estado = escape(request.form["estado"])  
-           estado_blog = escape(request.form["estado_blog"])  
-           fecha = escape(request.form["fecha"])       
-           try:
-               with sqlite3.connect('blogs.db') as con: 
-                   cur = con.cursor()
-                   cur.execute("INSERT INTO Blogs(titulo,cuerpo,estado,fecha_creacion,estado_blog)VALUES(?,?,?,?,?)",(titulo,cuerpo,estado,fecha,estado_blog))
-                   con.commit()
-                   return "Guardado Satisfactoriamente"
-           except:
-               con.rollback()
-           return render_template("principal.html")
-       return render_template("crear.html", form=form) 
-    except:
-       return render_template("crear.html", form=form)  
-    
+    if "usuari" in session:
+        form=formCrear()  
+        try: 
+            if request.method=='POST':
+                titulo = escape(request.form["titulo"])
+                cuerpo = escape(request.form["cuerpo"]) 
+                estado = escape(request.form["estado"])  
+                estado_blog = escape(request.form["estado_blog"])  
+                fecha = escape(request.form["fecha"])       
+                try:
+                    with sqlite3.connect('blogs.db') as con: 
+                        cur = con.cursor()
+                        cur.execute("INSERT INTO Blogs(titulo,cuerpo,estado,fecha_creacion,estado_blog)VALUES(?,?,?,?,?)",(titulo,cuerpo,estado,fecha,estado_blog))
+                        con.commit()
+                        return "Guardado Satisfactoriamente"
+                except:
+                    con.rollback()
+                return render_template("principal.html")
+            return render_template("crear.html", form=form) 
+        except:
+            return render_template("crear.html", form=form)  
+    else:
+        "accion no permitida <a href='/registro'>Adios</a>"
+
 
 @app.route("/logout")
 def logout():
@@ -171,4 +183,4 @@ def logout():
         return "Ya se cerró la sesión"
 
 if __name__ == "__main__":
-    app.run(debug=True)        
+    app.run(host='127.0.0.1',port = 443,ssl_context=('micertificado.pem','llaveprivada.pem'), debug=True)     
